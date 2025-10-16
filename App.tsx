@@ -204,8 +204,16 @@ const App: React.FC = () => {
         setAiError('');
         setAiInsights('');
     
+        const apiKey = (typeof process !== 'undefined' && process?.env?.API_KEY) ? process.env.API_KEY : undefined;
+
+        if (!apiKey) {
+            setAiError("The AI Insights feature is not configured. An API key is required for it to function.");
+            setIsAiLoading(false);
+            return;
+        }
+
         try {
-            const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+            const ai = new GoogleGenAI({ apiKey });
             const prompt = `You are a friendly and insightful financial advisor. A user is considering an SBI Credit Card loan with the following details:
 - Loan Amount: ${formatCurrency(summary.principal)}
 - Annual Interest Rate: ${interestRate}%
@@ -226,7 +234,11 @@ Based on these figures, provide a concise and easy-to-understand analysis in 2-3
         } catch (e) {
             console.error("Error fetching AI insights:", e);
             if (e instanceof Error) {
-                setAiError(`Failed to get AI insights: ${e.message}`);
+                if (e.message.includes('API key')) {
+                     setAiError('The API key is invalid or missing required permissions. Please check your configuration.');
+                } else {
+                     setAiError(`Failed to get AI insights: ${e.message}`);
+                }
             } else {
                 setAiError('An unknown error occurred while fetching AI insights.');
             }
