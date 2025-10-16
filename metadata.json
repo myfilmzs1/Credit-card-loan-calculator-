@@ -1,0 +1,5 @@
+{
+  "name": "Copy of SBI Credit Card EMI Loan Amortization Schedule Maker",
+  "description": "A web application to calculate and display the EMI (Equated Monthly Installment) loan amortization schedule for SBI credit card loans. Users can input loan amount, interest rate, and tenure to generate a detailed breakdown of payments over time.",
+  "requestFramePermissions": []
+}
